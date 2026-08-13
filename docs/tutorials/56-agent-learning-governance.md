@@ -20,7 +20,7 @@ review, the PyPI package still reports an older version.
 ```bash
 git clone --branch v0.8.0 https://github.com/microsoft/agent-learning.git ../agent-learning
 python -m pip install -e ../agent-learning
-python -m pip install -e "./agent-governance-python/agent-learning[agent-os]"
+python -m pip install -e "./agent-governance-python/agent-learning"
 ```
 
 Verify the target version:

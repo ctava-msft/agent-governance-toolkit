@@ -4,15 +4,16 @@
 
 from __future__ import annotations
 
-import hashlib
-import hmac
 import json
-import secrets
 from collections.abc import Mapping
 from typing import Any
 
-_ALGORITHM = "hmac-sha256"
-_PROCESS_KEY = secrets.token_bytes(32)
+from agent_os import GovernanceEventSigner
+
+_ALGORITHM = "HMAC-SHA256"
+_SIGNATURE_ALGORITHM_FIELD = "agtsignaturealg"
+_SIGNATURE_FIELD = "agtsignature"
+_PROCESS_KEY = GovernanceEventSigner.generate_key()
 
 
 def resolve_provenance_key(value: bytes | str | None) -> bytes:
@@ -132,8 +133,11 @@ def _promotion_payload(policy: Any, entry: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _sign(key: bytes, purpose: str, payload: Mapping[str, Any]) -> dict[str, str]:
-    signature = hmac.new(key, _canonical(purpose, payload), hashlib.sha256).hexdigest()
-    return {"algorithm": _ALGORITHM, "signature": signature}
+    signed = GovernanceEventSigner(key).sign(_envelope(purpose, payload))
+    return {
+        "algorithm": signed[_SIGNATURE_ALGORITHM_FIELD],
+        "signature": signed[_SIGNATURE_FIELD],
+    }
 
 
 def _verify(
@@ -147,18 +151,22 @@ def _verify(
     signature = provenance.get("signature")
     if not isinstance(signature, str):
         return False
-    expected = hmac.new(key, _canonical(purpose, payload), hashlib.sha256).hexdigest()
-    return hmac.compare_digest(signature, expected)
+    signed = _envelope(purpose, payload)
+    signed[_SIGNATURE_ALGORITHM_FIELD] = _ALGORITHM
+    signed[_SIGNATURE_FIELD] = signature
+    return GovernanceEventSigner(key).verify(signed)
 
 
-def _canonical(purpose: str, payload: Mapping[str, Any]) -> bytes:
-    return json.dumps(
-        {"purpose": purpose, "payload": payload},
+def _envelope(purpose: str, payload: Mapping[str, Any]) -> dict[str, Any]:
+    envelope = {"purpose": purpose, "payload": dict(payload)}
+    json.dumps(
+        envelope,
         allow_nan=False,
         ensure_ascii=True,
         separators=(",", ":"),
         sort_keys=True,
-    ).encode("utf-8")
+    )
+    return envelope
 
 
 __all__ = [
