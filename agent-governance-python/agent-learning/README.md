@@ -45,14 +45,14 @@ upstream release.
 ```bash
 git clone --branch v0.8.0 https://github.com/microsoft/agent-learning.git ../agent-learning
 python -m pip install -e ../agent-learning
-python -m pip install -e "./agent-governance-python/agent-learning[agent-os]"
+python -m pip install -e "./agent-governance-python/agent-learning"
 ```
 
 For Agent Framework and Foundry samples, include the corresponding extra:
 
 ```bash
-python -m pip install -e "./agent-governance-python/agent-learning[agent-os,framework]"
-python -m pip install -e "./agent-governance-python/agent-learning[agent-os,foundry]"
+python -m pip install -e "./agent-governance-python/agent-learning[framework]"
+python -m pip install -e "./agent-governance-python/agent-learning[foundry]"
 ```
 
 ## Quickstart

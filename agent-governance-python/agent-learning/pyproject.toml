@@ -33,12 +33,10 @@ classifiers = [
 ]
 dependencies = [
     "agent-learning>=0.8.0,<0.9.0",
+    "agent-governance-toolkit-core>=5.0.0,<6.0.0",
 ]
 
 [project.optional-dependencies]
-agent-os = [
-    "agent-governance-toolkit-core>=5.0.0,<6.0.0",
-]
 framework = [
     "agent-framework>=1.13.0,<1.14.0",
 ]
