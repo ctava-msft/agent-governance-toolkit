@@ -40,8 +40,9 @@ Use the direct runtime dependency `agent-learning>=0.8.0,<0.9.0`.
 - A direct dependency makes the supported object model explicit. Reproducing
   these contracts through local look-alikes would weaken compatibility checks
   and could silently misclassify learning data.
-- The upper bound prevents an unreviewed pre-1.0 minor release from changing
-  decision, storage, or activation semantics beneath governance controls.
+- The upper bound prevents a pre-1.0 minor release that has not been reviewed
+  from changing decision, storage, or activation semantics beneath governance
+  controls.
   Supporting `0.9.x` requires compatibility tests and a deliberate bound bump.
 - Agent Framework and Foundry remain optional extras because the core
   governance path does not require either runtime.
