@@ -1,6 +1,6 @@
 ---
 title: Agent Learning Governance
-last_reviewed: 2026-08-10
+last_reviewed: 2026-08-20
 owner: agt-maintainers
 ---
 
@@ -21,7 +21,7 @@ policy architecture.
 | Offline learning | Governed batches, Bayesian episode exclusion from REINFORCE, candidate action validation |
 | Policy lineage | Run-backed candidates with parent policy and training-run identifiers |
 | Promotion | Explainable evaluation suite, shadow/canary/production stages, fail-closed activation |
-| Operations | JSONL audit events, privacy-safe dashboard projection, dependency-free local HTML dashboard |
+| Operations | JSONL audit events and signed decision, candidate, and rollout provenance |
 
 ## Source
 
@@ -60,13 +60,6 @@ python -m pip install -e ../agent-learning
 python -m pip install -e "./agent-governance-python/agent-learning"
 ```
 
-Optional examples use these extras:
-
-```bash
-python -m pip install -e "./agent-governance-python/agent-learning[framework]"
-python -m pip install -e "./agent-governance-python/agent-learning[foundry]"
-```
-
 ## Public API
 
 ### Lifecycle
@@ -78,7 +71,6 @@ python -m pip install -e "./agent-governance-python/agent-learning[foundry]"
 - `GovernedLearningRunner`
 - `GovernedPolicyPromotion`
 - `GovernanceEvaluationPack`
-- `LearningGovernanceDashboardModel`
 
 ### Audit
 
@@ -125,12 +117,6 @@ production preparation from silently replacing the active policy.
 
 ## Next steps
 
-- Follow the [end-to-end tutorial](../tutorials/56-agent-learning-governance.md).
 - Review the [reference architecture](../integrations/agent-learning-governance.md).
-- Run the
-  [credential-free example](../../agent-governance-python/agent-learning/examples/governed_learning.py).
-- Open the
-  [sample notebook](../../agent-governance-python/agent-learning/examples/governed_agent_learning.ipynb).
-- Open the
-  [local dashboard](../../agent-governance-python/agent-learning/examples/dashboard.html)
-  and select a JSON snapshot created by `export_dashboard.py`.
+- Read [ADR-0033](../adr/0033-agent-learning-governance-integration.md) for the
+  dependency, governance, and delivery decisions.
