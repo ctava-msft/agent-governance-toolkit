@@ -10,6 +10,10 @@ from .audit import (
     JsonlAuditSink,
 )
 from .capture import EpisodePersistenceError, GovernedEpisodeCapture, UnresolvedDecisionError
+from .dashboard import (
+    GovernanceDashboardSnapshot,
+    LearningGovernanceDashboardModel,
+)
 from .evaluation import (
     CostPolicyEvaluation,
     DecisionRouteIntegrityEvaluation,
@@ -62,6 +66,7 @@ __all__ = [
     "EpisodePersistenceError",
     "EvaluationFinding",
     "ExcessivePrivilegeEvaluation",
+    "GovernanceDashboardSnapshot",
     "GovernanceDeniedError",
     "GovernanceEvaluationPack",
     "GovernanceEvaluationReport",
@@ -75,6 +80,7 @@ __all__ = [
     "GovernedPolicyPromotion",
     "InMemoryAuditSink",
     "JsonlAuditSink",
+    "LearningGovernanceDashboardModel",
     "LearningGovernanceReport",
     "PolicyAwareRewardAdapter",
     "PolicyDecisionRecord",

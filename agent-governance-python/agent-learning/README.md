@@ -14,7 +14,8 @@ Apply Agent Governance Toolkit controls throughout an Agent Learning lifecycle:
 - isolate learned candidates from the active policy until promotion succeeds;
 - run explainable governance evaluations before shadow, canary, or production
   rollout;
-- emit audit events and persist signed policy lineage.
+- emit audit events, persist signed policy lineage, and project privacy-safe
+  dashboard data.
 
 Agent Learning learns an interpretable policy over discrete actions. This
 integration does not fine-tune LLM weights and does not replace Agent Learning's
@@ -50,6 +51,13 @@ upstream release.
 git clone --branch v0.8.0 https://github.com/microsoft/agent-learning.git ../agent-learning
 python -m pip install -e ../agent-learning
 python -m pip install -e "./agent-governance-python/agent-learning"
+```
+
+For Agent Framework and Foundry samples, include the corresponding extra:
+
+```bash
+python -m pip install -e "./agent-governance-python/agent-learning[framework]"
+python -m pip install -e "./agent-governance-python/agent-learning[foundry]"
 ```
 
 ## Quickstart
@@ -242,10 +250,13 @@ The default pack checks:
 
 Every check returns independent findings and metrics for audit and remediation.
 
-### Audit models
+### Audit and dashboard models
 
 `InMemoryAuditSink` is intended for tests and notebooks.
 `JsonlAuditSink` provides an append-only UTF-8 local audit trail.
+`LearningGovernanceDashboardModel` projects episodes, shaped rewards, policy
+lineage, runs, promotion history, and audit events without exposing raw prompts
+or assistant outputs.
 
 ## Policy evaluator compatibility
 
@@ -259,6 +270,22 @@ Every check returns independent findings and metrics for audit and remediation.
 Agent Learning capture and training are synchronous. Async-only policy
 evaluators are rejected explicitly instead of being run through a nested event
 loop.
+
+## Examples
+
+- [governed_learning.py](examples/governed_learning.py): complete local
+  capture, rewards, REINFORCE, Bayesian decision, promotion, audit, and
+  dashboard lifecycle.
+- [agent_framework_capture.py](examples/agent_framework_capture.py): capture
+  Agent Framework responses as governed learning episodes.
+- [azure_ai_foundry.py](examples/azure_ai_foundry.py): Foundry execution with
+  Azure AI Evaluation scoring and governed offline learning.
+- [export_dashboard.py](examples/export_dashboard.py): export a dashboard
+  snapshot from a durable local Agent Learning store.
+- [dashboard.html](examples/dashboard.html): inspect a privacy-safe JSON export
+  locally without a server or third-party web dependency.
+- [governed_agent_learning.ipynb](examples/governed_agent_learning.ipynb):
+  interactive walkthrough.
 
 ## Security notes
 

@@ -183,6 +183,7 @@ nav:
     - Observability & Tracing: tutorials/13-observability-and-tracing.md
     - Kill Switch & Rate Limiting: tutorials/14-kill-switch-and-rate-limiting.md
     - RL Training Governance: tutorials/15-rl-training-governance.md
+    - Agent Learning Governance: tutorials/56-agent-learning-governance.md
     - Protocol Bridges: tutorials/16-protocol-bridges.md
     - Advanced Trust: tutorials/17-advanced-trust-and-behavior.md
     - Compliance Verification: tutorials/18-compliance-verification.md

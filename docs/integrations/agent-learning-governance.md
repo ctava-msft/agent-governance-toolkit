@@ -86,6 +86,7 @@ audits these episodes but does not pass them to `ReinforceLearner.update()`.
 | `GovernedLearningRunner` | Batch governance, reward adaptation, eligibility filtering, isolated update | Activating a learned candidate |
 | `GovernanceEvaluationPack` | Explainable promotion findings and metrics | Proving safety outside the evaluated context |
 | `GovernedPolicyPromotion` | Staged rollout and final activation | Deploying without a caller-provided callback |
+| Dashboard model | Read-only artifact projection | Exposing prompt or response bodies |
 
 ## Artifact model
 
@@ -154,7 +155,8 @@ output and string-valued tool arguments/results. It stores `user_input`,
 redact those fields before capture and apply access controls, encryption, and
 retention policy to the episode store. The governance layer stores identifiers,
 outcomes, risk, counts, and summaries; it does not copy raw prompt text, tool
-arguments, credentials, or policy backend responses into audit events.
+arguments, credentials, or policy backend responses into audit events or
+dashboard rows.
 
 ### Deployment
 
@@ -181,6 +183,7 @@ and promotion; the key is not persisted in Agent Learning artifacts.
   Evaluation, Agent Framework `FoundryChatClient`, and an enterprise audit
   backend adapted to `AuditSink`.
 
-See the [package page](../packages/agent-learning.md) for API links and
-[ADR-0033](../adr/0033-agent-learning-governance-integration.md) for the
+See the [tutorial](../tutorials/56-agent-learning-governance.md) for a complete
+local workflow, the [package page](../packages/agent-learning.md) for API links,
+and [ADR-0033](../adr/0033-agent-learning-governance-integration.md) for the
 dependency, governance, and delivery decisions.
