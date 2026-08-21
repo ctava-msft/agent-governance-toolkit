@@ -37,14 +37,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-framework = [
-    "agent-framework>=1.13.0,<1.14.0",
-]
-foundry = [
-    "agent-framework>=1.13.0,<1.14.0",
-    "agent-framework-foundry>=1.10.4,<1.11.0",
-    "azure-identity>=1.25.3,<1.26.0",
-]
 dev = [
     "build==1.5.0",
     "pytest==9.1.1",
