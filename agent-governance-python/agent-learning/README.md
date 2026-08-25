@@ -39,7 +39,16 @@ time, PyPI still reported an older Agent Learning build, so this repository
 validated compatibility directly against tag `v0.8.0` without installing the
 new release.
 
-## Install from this repository
+## Installation
+
+Agent Learning is an optional integration dependency. The base package supports
+duck-typed captures, stores, policies, and learners without installing it. To
+use convenience paths that construct Agent Learning types, install the
+`agent-learning` extra:
+
+```bash
+python -m pip install "agent_learning_gov[agent-learning]"
+```
 
 Until Agent Learning `0.8.x` is available from the configured package index,
 install the audited `v0.8.0` source checkout first. Repository maintainers must

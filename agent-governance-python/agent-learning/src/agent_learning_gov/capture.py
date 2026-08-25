@@ -57,7 +57,7 @@ class GovernedEpisodeCapture:
                 from agent_learning import EpisodeCapture
             except ImportError as exc:
                 raise ImportError(
-                    "Install agent-learning>=0.8.0,<0.9.0 to create episode capture"
+                    "Install agent_learning_gov[agent-learning] to create episode capture"
                 ) from exc
             capture = EpisodeCapture(config, store)
         self.capture = capture

@@ -1,6 +1,6 @@
 ---
 title: "ADR-0033: Agent Learning Governance Integration"
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-25
 owner: agt-maintainers
 ---
 
@@ -32,17 +32,18 @@ provide a deployment platform.
 
 ### Dependency boundary
 
-Use the direct runtime dependency `agent-learning>=0.8.0,<0.9.0`.
+Expose `agent-learning>=0.8.0` through the optional `agent-learning` extra.
+The base package accepts duck-typed captures, stores, policies, and learners;
+only convenience paths that construct concrete Agent Learning types require the
+extra.
 
 - The adapter is implemented and tested against the `0.8.x` contracts for
   `EpisodeCapture`, `LearningRunner`, `TrainingRun`, policy snapshots, stores,
   and the learned-policy and Bayesian decision routes.
-- A direct dependency makes the supported object model explicit. Reproducing
-  these contracts through local look-alikes would weaken compatibility checks
-  and could silently misclassify learning data.
-- The upper bound prevents an unreviewed pre-1.0 minor release from changing
-  decision, storage, or activation semantics beneath governance controls.
-  Supporting `0.9.x` requires compatibility tests and a deliberate bound bump.
+- The optional extra makes the concrete integration explicit without forcing
+  an external package onto applications that provide compatible objects.
+- `0.8.x` is the validated compatibility baseline. Later releases require
+  compatibility testing before AGT claims support for them.
 - Agent Framework and Foundry remain optional extras because the core
   governance path does not require either runtime.
 
@@ -96,8 +97,8 @@ needed to explain the core contract stays with the core review.
 
 - Applications receive reusable, testable governance controls without changes
   to Agent Learning itself.
-- Compatibility is intentionally limited to `0.8.x`; each new upstream minor
-  version requires an explicit review and test update.
+- Compatibility is validated against `0.8.x`; each new upstream minor version
+  requires an explicit review and test update before it is supported.
 - Governance metadata augments Agent Learning artifacts rather than replacing
   them, so unwrapped Agent Learning calls remain outside this enforcement
   boundary.
@@ -113,9 +114,9 @@ needed to explain the core contract stays with the core review.
   learning library to AGT policy and release cadence.
 - **Ship documentation and examples only:** rejected because examples cannot
   provide reusable enforcement, provenance, or testable rollback semantics.
-- **Use structural look-alikes with no Agent Learning dependency:** rejected
-  because the adapter relies on concrete pre-1.0 decision and storage semantics
-  where silent compatibility drift would be unsafe.
+- **Validate only structural look-alikes:** rejected because concrete Agent
+  Learning integration tests are needed to detect drift in pre-1.0 decision
+  and storage semantics.
 
 ## References
 
