@@ -25,8 +25,15 @@ useDefault = true
     '''policy-engine/.*/(test|tests|fixtures)/.*''',
 
     # Credential redaction test fixtures (fake keys used to test redaction)
+    '''agent-governance-python/agent-mesh/tests/test_managed_identity\.py''',
     '''agent-governance-python/agent-discovery/tests/test_process_redaction\.py''',
     '''agent-governance-python/agent-os/tests/test_credential_redactor\.py''',
+    '''agent-governance-python/agent-os/tests/test_cli_extended_coverage\.py''',
+    '''agent-governance-python/agent-os/tests/test_mute_agent\.py''',
+    '''agent-governance-python/agent-os/tests/test_secure_codegen\.py''',
+    '''agent-governance-python/agent-os/tests/test_security_skills\.py''',
+    '''agent-governance-python/agent-sre/tests/unit/test_capture\.py''',
+    '''agent-governance-typescript/agent-os-vscode/src/test/server/governanceServer\.test\.ts''',
     '''agent-governance-dotnet/tests/AgentGovernance\.Tests/McpCredentialRedactorTests\.cs''',
 
     # Credential redactor source (contains regex patterns that match secret formats)
@@ -53,4 +60,13 @@ useDefault = true
 
     # Canary-token example in the .NET SDK tutorial (docs/tutorials/19-dotnet-sdk.md)
     '''^SECRET-MARKER-xyz789$''',
+
+    # False positives on type names, keybindings, and algorithm names.
+    '''^ed25519\.Ed25519PrivateKey$''',
+    '''^Ed25519PrivateKey$''',
+    '''^ctrl\+shift\+down$''',
+    '''^ChaCha20-Poly1305$''',
+
+    # Fake API key in Rust response-redaction tests.
+    '''^abcd1234567890$''',
   ]
