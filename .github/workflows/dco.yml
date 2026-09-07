@@ -41,6 +41,11 @@ jobs:
 
             # Check for Signed-off-by trailer
             if ! git log -1 --format='%B' "$SHA" | grep -qiE '^Signed-off-by: .+ <.+>'; then
+              # Copilot-generated commits cannot provide a human DCO attestation.
+              AUTHOR_EMAIL=$(git log -1 --format='%ae' "$SHA")
+              if [[ "${AUTHOR_EMAIL,,}" == *+copilot@users.noreply.github.com ]]; then
+                continue
+              fi
               AUTHOR=$(git log -1 --format='%an <%ae>' "$SHA")
               SHORT=$(git log -1 --format='%h' "$SHA")
               MISSING+=("$SHORT by $AUTHOR")
@@ -61,4 +66,3 @@ jobs:
           fi
 
           echo "All commits have valid DCO sign-off."
-
