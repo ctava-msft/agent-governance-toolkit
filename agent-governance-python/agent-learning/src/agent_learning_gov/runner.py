@@ -136,7 +136,7 @@ class GovernedLearningRunner:
             from agent_learning import TrainingRun, TrainingStatus
         except ImportError as exc:
             raise ImportError(
-                "Install agent-learning>=0.8.0,<0.9.0 to run offline learning"
+                "Install agent_learning_gov[agent-learning] to run offline learning"
             ) from exc
 
         parent_snapshot = self.policy.snapshot()
