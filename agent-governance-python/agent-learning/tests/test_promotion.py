@@ -160,6 +160,25 @@ def test_canary_deployment_records_promotion_history() -> None:
     assert store.store_policy_calls == 0
 
 
+def test_canary_rejects_false_equivalent_callback_result() -> None:
+    store = _Store(_policy("search", "summarize"))
+    promoter = GovernedPolicyPromotion(
+        _PolicyEvaluator(),
+        store=store,
+        provenance_key=PROVENANCE_KEY,
+        deploy_callback=lambda policy, stage, context: 0,
+    )
+
+    result = promoter.promote_if_compliant(
+        store.policy,
+        stage=PromotionStage.CANARY,
+        baseline={"violation_rate": 0.0},
+    )
+
+    assert result.status is PromotionStatus.FAILED
+    assert result.reason == "Deployment callback rejected the policy"
+
+
 def test_production_requires_completed_canary() -> None:
     store = _Store(_policy("search", "summarize"))
     promoter = GovernedPolicyPromotion(
@@ -258,7 +277,9 @@ def test_behavior_metadata_mutation_invalidates_promotion_provenance() -> None:
 
 def test_successful_production_deployment_activates_after_canary() -> None:
     store = _Store(_policy("search", "summarize"))
+    audit = InMemoryAuditSink()
     callback_active_ids = []
+    callback_audit_events = []
 
     def deploy(policy: Any, stage: PromotionStage, context: Mapping[str, Any]) -> bool:
         del context
@@ -270,13 +291,20 @@ def test_successful_production_deployment_activates_after_canary() -> None:
                     active.metadata["agent_governance"]["promotion"]["stage"],
                 )
             )
+            callback_audit_events.append(
+                [
+                    (event.event_type, event.outcome)
+                    for event in audit.query(agent_id=policy.agent_id)
+                    if event.details.get("stage") == PromotionStage.PRODUCTION.value
+                ]
+            )
         return True
 
     promoter = GovernedPolicyPromotion(
         _PolicyEvaluator(),
         store=store,
         provenance_key=PROVENANCE_KEY,
-        audit_sink=InMemoryAuditSink(),
+        audit_sink=audit,
         deploy_callback=deploy,
     )
     promoter.promote_if_compliant(
@@ -297,6 +325,16 @@ def test_successful_production_deployment_activates_after_canary() -> None:
     assert result.status is PromotionStatus.DEPLOYED
     assert store.store_policy_calls == 1
     assert callback_active_ids == [("policy-2", "production")]
+    assert callback_audit_events == [[(AuditEventType.PROMOTION_APPROVED, "approved")]]
+    production_audit_events = [
+        (event.event_type, event.outcome)
+        for event in audit.query(agent_id="agent-1")
+        if event.details.get("stage") == PromotionStage.PRODUCTION.value
+    ]
+    assert production_audit_events == [
+        (AuditEventType.POLICY_DEPLOYED, "deployed"),
+        (AuditEventType.PROMOTION_APPROVED, "approved"),
+    ]
     history = store.policy.metadata["agent_governance"]["promotion"]["history"]
     assert [item["stage"] for item in history] == ["canary", "production"]
 

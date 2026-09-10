@@ -31,6 +31,10 @@ def _utcnow_iso() -> str:
     return datetime.now(UTC).isoformat()
 
 
+def _deployment_rejected(result: Any) -> bool:
+    return result in (False,)
+
+
 class PromotionStage(str, Enum):
     """Supported rollout stages for an approved policy."""
 
@@ -321,7 +325,7 @@ class GovernedPolicyPromotion:
                     "GovernedPolicyPromotion is synchronous; provide a synchronous "
                     "deployment callback"
                 )
-            deployed = deployment_result is not False
+            deployed = not _deployment_rejected(deployment_result)
             result = PromotionResult(
                 policy_id=policy.id,
                 policy_version=policy.version,
@@ -376,6 +380,11 @@ class GovernedPolicyPromotion:
             result,
             self._provenance_key,
         )
+        approval_result = replace(
+            result,
+            status=PromotionStatus.APPROVED,
+            reason="Governance approved for deployment",
+        )
         try:
             self._require_production_infrastructure(policy)
             get_active_policy = getattr(self.store, "get_active_policy", None)
@@ -385,7 +394,7 @@ class GovernedPolicyPromotion:
             if previous_policy is None:
                 raise LookupError("Production activation requires an active rollback policy")
             self._persist_candidate(prepared_policy, require_durable=True)
-            self._emit_promotion_result(prepared_policy, result)
+            self._emit_promotion_result(prepared_policy, approval_result)
             self.store.store_policy(prepared_policy)
         except Exception as exc:  # noqa: BLE001
             return self._record_activation_failure(policy, result, exc)
@@ -404,7 +413,7 @@ class GovernedPolicyPromotion:
                     "GovernedPolicyPromotion is synchronous; provide a synchronous "
                     "deployment callback"
                 )
-            if deployment_result == False:
+            if _deployment_rejected(deployment_result):
                 raise RuntimeError("Deployment callback rejected the policy")
         except Exception as exc:  # noqa: BLE001
             try:
