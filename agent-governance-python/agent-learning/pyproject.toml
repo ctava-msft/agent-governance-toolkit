@@ -37,7 +37,7 @@ dependencies = [
 
 [project.optional-dependencies]
 agent-learning = [
-    "agent-learning>=0.8.0",
+    "agent-learning>=0.8.0,<0.9.0",
 ]
 dev = [
     "build==1.5.0",

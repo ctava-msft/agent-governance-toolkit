@@ -133,10 +133,9 @@ REGISTERED_PACKAGES = {
     "aps", "agent-passport-system",
     # Hyperlight micro-VM SDK (CNCF Sandbox project, on PyPI)
     "hyperlight-sandbox", "hyperlight_sandbox", "hyperlight",
-    # Microsoft Agent Framework (MAF) packages used in examples
+    # Microsoft Agent Framework (MAF) — not yet on PyPI, used in examples
     "agent-framework", "agent_framework",
     "agent-framework-openai", "agent_framework_openai",
-    "agent-framework-foundry", "agent_framework_foundry",
     # Microsoft Agent Learning (real PyPI package, used by agent-learning governance)
     "agent-learning", "agent_learning",
     # Azure Functions Python worker (used in foundry-ai-gateway-pdp example)
