@@ -495,7 +495,7 @@ def _is_reinforce_eligible(
         return False
     if telemetry.selection_basis != "learned_policy":
         return False
-    if telemetry.reinforce_eligible != True:
+    if telemetry.reinforce_eligible is not True:
         return False
     if (
         episode.agent_id != parent_snapshot.agent_id
