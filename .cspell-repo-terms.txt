@@ -937,6 +937,7 @@ sanitisation
 sanitised
 sarif
 sboms
+sbyte
 scak
 schemaversion
 scikit
@@ -1185,3 +1186,5 @@ redirections
 karimad
 رقم
 قومي
+GPAI
+Harmonised
